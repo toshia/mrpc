@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package mrpc;
+
+import "event.proto";
+
+service PluggaloidService {
+  rpc Query(ProxyQuery) returns (ProxyValue);
+  rpc Subscribe(SubscribeRequest) returns (stream Event);
+}
+
+message SubscribeRequest {
+  string name = 1;
+}

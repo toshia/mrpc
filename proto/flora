@@ -1,0 +1,26 @@
+
+
+E
+C/home/toshi/.mikutter/plugin/remote_plugin_call/proto/service.proto7
+5/home/toshi/.mikutter/plugin/remote_plugin_call/proto"¹
+h
+mrpc.PluggaloidService	SubscribeC/home/toshi/.mikutter/plugin/remote_plugin_call/proto/service.proto#{
+  "name": "gui_child_activated"
+}"&{09bf2f01-16c7-4079-98ea-0df4745720e2}("ú
+d
+mrpc.PluggaloidServiceQueryC/home/toshi/.mikutter/plugin/remote_plugin_call/proto/service.protoh{
+  "subject": {
+    "classId": "Plugin::GUI::Timeline",
+    "id": "31720"
+   },
+  "selection": "to_a"
+}"&{09bf2f01-16c7-4079-98ea-0df4745720e2}("Š
+d
+mrpc.PluggaloidServiceQueryC/home/toshi/.mikutter/plugin/remote_plugin_call/proto/service.protox{
+  "subject": {
+      "classId": "Plugin::Mastodon::Status",
+      "id": "58940"
+     },
+  "selection": "description"
+}"&{09bf2f01-16c7-4079-98ea-0df4745720e2}(*h
+&{09bf2f01-16c7-4079-98ea-0df4745720e2}local127.0.0.1:50051*&{00000000-0000-0000-0000-000000000000}

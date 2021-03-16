@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package mrpc;
+
+import "wellknown/timestamp.proto";
+
+message Event {
+  string name = 1;
+  int64 event_id = 2;
+  repeated Param param = 3;
+}
+
+message Param {
+  message Sequence {
+    repeated Param val = 1;
+  }
+  oneof val {
+    string sval = 1;
+    sint64 ival = 2;
+    double dval = 3;
+    bool bval = 4;
+    google.protobuf.Timestamp time = 5;
+    Proxy proxy = 6;
+    string error = 7;
+    Sequence sequence = 8;
+  }
+}
+
+message Proxy {
+  string class_id = 1;
+  string id = 2;
+}
+
+message ProxyQuery {
+  Proxy subject = 1;
+  string selection = 2;
+}
+
+message ProxyValue {
+  Proxy subject = 1;
+  Param response = 2;
+}

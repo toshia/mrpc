@@ -1,0 +1,17 @@
+GEM
+  specs:
+    google-protobuf (3.15.6-x86_64-linux)
+    googleapis-common-protos-types (1.0.6)
+      google-protobuf (~> 3.14)
+    grpc (1.36.0-x86_64-linux)
+      google-protobuf (~> 3.14)
+      googleapis-common-protos-types (~> 1.0)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  grpc (>= 1.36.0, < 2)
+
+BUNDLED WITH
+   2.2.4
