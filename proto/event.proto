@@ -6,7 +6,7 @@ import "wellknown/timestamp.proto";
 
 message Event {
   string name = 1;
-  int64 event_id = 2;
+  fixed64 event_id = 2;
   repeated Param param = 3;
 }
 
@@ -16,7 +16,7 @@ message Param {
   }
   oneof val {
     string sval = 1;
-    sint64 ival = 2;
+    int64 ival = 2;
     double dval = 3;
     bool bval = 4;
     google.protobuf.Timestamp time = 5;
@@ -39,4 +39,21 @@ message ProxyQuery {
 message ProxyValue {
   Proxy subject = 1;
   Param response = 2;
+}
+
+message FilteringPayload {
+  message Start {
+    string name = 1;
+  }
+
+  oneof payload {
+    Start start = 1;
+    FilterQuery response = 2;
+  }
+}
+
+message FilterQuery {
+  string name = 1;
+  fixed64 event_id = 2;
+  repeated Param param = 3;
 }

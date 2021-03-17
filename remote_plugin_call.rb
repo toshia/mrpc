@@ -31,6 +31,67 @@ module Plugin::RemotePluginCall
         end
       end
     end
+
+    def filtering(request, _call)
+      oqueue = Queue.new # Mrpc::FilterQuery
+      iqueue = Queue.new # Mrpc::FilterQuery
+      filter = nil
+      event_id = 0
+
+      pp _call
+
+      Enumerator.new do |yielder|
+        request.each do |filtering_payload|
+          notice "receive: #{filtering_payload.inspect}"
+          case
+          when filtering_payload.has_start?
+            filter = filtering_start(filtering_payload.start.name.freeze, iqueue, oqueue)
+          when filtering_payload.has_response?
+            response = filtering_payload.response
+            pp response
+            if response.event_id == event_id
+              iqueue.push(response)
+            else
+              warn "event_id mismatched! (expect #{event_id}, actual #{response.event_id} in `#{filter.name}')"
+            end
+          end
+
+          a = oqueue.pop
+          event_id = a.event_id
+          notice "send #{a.inspect}"
+          yielder << a
+        end
+        notice "#{filter&.name} closed normally"
+      rescue => err
+        error err
+      ensure
+        warn "#{filter&.name} closed!!!"
+        iqueue.close
+        oqueue.close
+        Plugin[:remote_plugin_call].detach(filter) if filter
+      end
+    end
+
+    # @params [String|Symbol] filter_name フィルタ名
+    # @params [Queue.new<Mrpc::FilterQuery>] iqueue クライアントからのレスポンス
+    # @params [Queue.new<Mrpc::FilterQuery>] oqueue サーバからのリクエスト
+    def filtering_start(filter_name, iqueue, oqueue, &gen_event_id)
+      Plugin[:remote_plugin_call].add_event_filter(filter_name) do |*args|
+        event_id = SecureRandom.random_number(1 << 64)
+        oqueue.push(
+          ::Mrpc::FilterQuery.new(
+            name: filter_name,
+            event_id: event_id,
+            param: args.map(&Plugin::RemotePluginCall.method(:mrpc_param))
+          )
+        )
+        filter_query = iqueue.pop
+        notice "response: #{filter_query}"
+        if filter_query&.event_id == event_id
+          filter_query.param
+        end
+      end
+    end
   end
 
   module Proxy

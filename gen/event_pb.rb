@@ -8,13 +8,13 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_file("event.proto", :syntax => :proto3) do
     add_message "mrpc.Event" do
       optional :name, :string, 1
-      optional :event_id, :int64, 2
+      optional :event_id, :fixed64, 2
       repeated :param, :message, 3, "mrpc.Param"
     end
     add_message "mrpc.Param" do
       oneof :val do
         optional :sval, :string, 1
-        optional :ival, :sint64, 2
+        optional :ival, :int64, 2
         optional :dval, :double, 3
         optional :bval, :bool, 4
         optional :time, :message, 5, "google.protobuf.Timestamp"
@@ -38,6 +38,20 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :subject, :message, 1, "mrpc.Proxy"
       optional :response, :message, 2, "mrpc.Param"
     end
+    add_message "mrpc.FilteringPayload" do
+      oneof :payload do
+        optional :start, :message, 1, "mrpc.FilteringPayload.Start"
+        optional :response, :message, 2, "mrpc.FilterQuery"
+      end
+    end
+    add_message "mrpc.FilteringPayload.Start" do
+      optional :name, :string, 1
+    end
+    add_message "mrpc.FilterQuery" do
+      optional :name, :string, 1
+      optional :event_id, :fixed64, 2
+      repeated :param, :message, 3, "mrpc.Param"
+    end
   end
 end
 
@@ -48,4 +62,7 @@ module Mrpc
   Proxy = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.Proxy").msgclass
   ProxyQuery = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.ProxyQuery").msgclass
   ProxyValue = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.ProxyValue").msgclass
+  FilteringPayload = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.FilteringPayload").msgclass
+  FilteringPayload::Start = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.FilteringPayload.Start").msgclass
+  FilterQuery = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.FilterQuery").msgclass
 end
