@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 $LOAD_PATH << File.join(__dir__, 'gen')
-require 'service_services_pb.rb'
+require 'service_services_pb'
 require 'pry'
 
 module Plugin::RemotePluginCall
   class Server < ::Mrpc::PluggaloidService::Service
-
     # @params q ::Mrpc::ProxyValue
     def query(q, _call)
       method = q.selection
@@ -40,35 +39,33 @@ module Plugin::RemotePluginCall
 
       pp _call
 
-      Enumerator.new do |yielder|
-        request.each do |filtering_payload|
-          notice "receive: #{filtering_payload.inspect}"
-          case
-          when filtering_payload.has_start?
-            filter = filtering_start(filtering_payload.start.name.freeze, iqueue, oqueue)
-          when filtering_payload.has_response?
-            response = filtering_payload.response
-            pp response
-            if response.event_id == event_id
-              iqueue.push(response)
-            else
-              warn "event_id mismatched! (expect #{event_id}, actual #{response.event_id} in `#{filter.name}')"
-            end
+      request.each do |filtering_payload|
+        notice "receive: #{filtering_payload.inspect}"
+        if filtering_payload.has_start?
+          filter = filtering_start(filtering_payload.start.name.freeze, iqueue, oqueue)
+        elsif filtering_payload.has_response?
+          response = filtering_payload.response
+          pp response
+          if response.event_id == event_id
+            iqueue.push(response)
+          else
+            warn "event_id mismatched! (expect #{event_id}, actual #{response.event_id} in `#{filter.name}')"
           end
-
-          a = oqueue.pop
-          event_id = a.event_id
-          notice "send #{a.inspect}"
-          yielder << a
         end
-        notice "#{filter&.name} closed normally"
-      rescue => err
-        error err
+      rescue StandardError => e
+        error e
       ensure
         warn "#{filter&.name} closed!!!"
         iqueue.close
         oqueue.close
         Plugin[:remote_plugin_call].detach(filter) if filter
+      end
+      Enumerator.new do |yielder|
+        a = oqueue.pop
+        event_id = a.event_id
+        notice "send #{a.inspect}"
+        yielder << a
+        notice "#{filter&.name} closed normally"
       end
     end
 
@@ -173,7 +170,7 @@ Plugin.create(:remote_plugin_call) do
         port = '0.0.0.0:50051'
         s = GRPC::RpcServer.new
         s.add_http2_port(port, :this_port_is_insecure)
-        s.handle(Plugin::RemotePluginCall::Server.new())
+        s.handle(Plugin::RemotePluginCall::Server.new)
         warn 'Plugin::RemotePluginCall::Server start'
         s.run
       rescue Exception => e
