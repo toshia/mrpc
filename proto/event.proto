@@ -38,7 +38,8 @@ message ProxyQuery {
 
 message ProxyValue {
   Proxy subject = 1;
-  Param response = 2;
+  string selection = 2;
+  Param response = 3;
 }
 
 message FilteringPayload {
@@ -49,6 +50,14 @@ message FilteringPayload {
   oneof payload {
     Start start = 1;
     FilterQuery response = 2;
+    ProxyValue resolve = 3;
+  }
+}
+
+message FilteringRequest {
+  oneof payload {
+    FilterQuery request = 2;
+    ProxyQuery query = 3;
   }
 }
 

@@ -16,7 +16,7 @@ module Mrpc
 
       rpc :Query, ::Mrpc::ProxyQuery, ::Mrpc::ProxyValue
       rpc :Subscribe, ::Mrpc::SubscribeRequest, stream(::Mrpc::Event)
-      rpc :Filtering, stream(::Mrpc::FilteringPayload), stream(::Mrpc::FilterQuery)
+      rpc :Filtering, stream(::Mrpc::FilteringPayload), stream(::Mrpc::FilteringRequest)
     end
 
     Stub = Service.rpc_stub_class

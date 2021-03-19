@@ -7,7 +7,7 @@ import "event.proto";
 service PluggaloidService {
   rpc Query(ProxyQuery) returns (ProxyValue);
   rpc Subscribe(SubscribeRequest) returns (stream Event);
-  rpc Filtering(stream FilteringPayload) returns (stream FilterQuery);
+  rpc Filtering(stream FilteringPayload) returns (stream FilteringRequest);
 }
 
 message SubscribeRequest {

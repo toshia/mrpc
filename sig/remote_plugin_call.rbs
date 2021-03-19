@@ -1,0 +1,67 @@
+# TypeProf 0.12.0
+
+# Classes
+class Plugin
+  module RemotePluginCall
+    def self.mrpc_param: (untyped arg) -> Mrpc::Param
+      def self.mrpc_param_unbox: (Mrpc::Param box, ^(Plugin::RemotePluginCall::ProxyObject, Symbol) -> Mrpc::Param unbox_requester) -> (nil | String | Integer | Float | bool | Time | Plugin::RemotePluginCall::ProxyObject | Enumerable[untyped])
+
+    class FilteringRequestSender
+      @res: Hash[Mrpc::Proxy, Hash[String, Set[Thread::Queue]]]
+
+      attr_reader queue: Thread::Queue
+      def initialize: -> void
+      def request: (Mrpc::FilterQuery message) -> void
+      def query: (target: Plugin::RemotePluginCall::ProxyObject, selection: String) -> Mrpc::Param
+      def resolve: (Mrpc::ProxyValue proxy_value) -> void
+      def close: -> Thread::Queue
+      def closed?: -> bool
+    end
+
+    module Proxy
+      extend Plugin::RemotePluginCall::Proxy::Extend
+
+      self.@proxy_classes: Hash[String, Plugin::RemotePluginCall::Proxy::Extend]
+
+      def self.unwrap: (Mrpc::Proxy proxy) -> Plugin::RemotePluginCall::Proxy
+      def self.included: (Plugin::RemotePluginCall::Proxy::Extend klass) -> void
+      def self.proxy_classes: -> Hash[String, Plugin::RemotePluginCall::Proxy::Extend]
+      def _proxy_identity: -> String
+
+      module Extend
+        @_proxy_revive_dict: Hash[Integer, Plugin::RemotePluginCall::Proxy]
+
+        def _proxy_revive_dict: -> Hash[Integer, Plugin::RemotePluginCall::Proxy]
+      end
+    end
+
+    class ProxyObject < BasicObject
+      @unbox_requester: ^(Plugin::RemotePluginCall::ProxyObject, Symbol) -> Mrpc::Param
+      @cache: Hash[Symbol, Mrpc::Param]
+
+      attr_reader proxy: Mrpc::Proxy
+      def initialize: (Mrpc::Proxy proxy, (^(Plugin::RemotePluginCall::ProxyObject, Symbol) -> Mrpc::Param) unbox_requester) -> void
+      def method_missing: (Symbol message, *bot rest, **bot) -> Mrpc::Param?
+    end
+
+    class Server
+      def query: (untyped q, untyped _call) -> untyped
+               | (untyped q, untyped _call) -> untyped
+      def subscribe: (untyped request, untyped _call) -> Enumerator[bot, bot]
+                   | (untyped request, untyped _call) -> Enumerator[bot, bot]
+      def filtering: (untyped request, untyped _call) -> Enumerator[bot, bot]
+                   | (untyped request, untyped _call) -> Enumerator[bot, bot]
+      def filtering_start: (untyped filter_name, Thread::Queue filter_response_queue, FilteringRequestSender sender) -> untyped
+                         | (untyped filter_name, Thread::Queue filter_response_queue, FilteringRequestSender sender) -> untyped
+    end
+  end
+
+  def self.[]: (Symbol | String) -> Plugin
+  def add_event: (Symbol | String) { (*bot rest) -> void } -> Plugin::Event
+end
+
+module Kernel
+  def atomic: [T] () { () -> T } -> T
+  def notice: (untyped) -> void
+  def error: (untyped) -> void
+end

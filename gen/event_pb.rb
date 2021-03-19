@@ -36,16 +36,24 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     end
     add_message "mrpc.ProxyValue" do
       optional :subject, :message, 1, "mrpc.Proxy"
-      optional :response, :message, 2, "mrpc.Param"
+      optional :selection, :string, 2
+      optional :response, :message, 3, "mrpc.Param"
     end
     add_message "mrpc.FilteringPayload" do
       oneof :payload do
         optional :start, :message, 1, "mrpc.FilteringPayload.Start"
         optional :response, :message, 2, "mrpc.FilterQuery"
+        optional :resolve, :message, 3, "mrpc.ProxyValue"
       end
     end
     add_message "mrpc.FilteringPayload.Start" do
       optional :name, :string, 1
+    end
+    add_message "mrpc.FilteringRequest" do
+      oneof :payload do
+        optional :request, :message, 2, "mrpc.FilterQuery"
+        optional :query, :message, 3, "mrpc.ProxyQuery"
+      end
     end
     add_message "mrpc.FilterQuery" do
       optional :name, :string, 1
@@ -64,5 +72,6 @@ module Mrpc
   ProxyValue = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.ProxyValue").msgclass
   FilteringPayload = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.FilteringPayload").msgclass
   FilteringPayload::Start = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.FilteringPayload.Start").msgclass
+  FilteringRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.FilteringRequest").msgclass
   FilterQuery = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.FilterQuery").msgclass
 end

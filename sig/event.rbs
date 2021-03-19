@@ -1,0 +1,223 @@
+module Mrpc
+  class Event < ::Protobuf::Message
+    attr_reader name(): ::String
+
+    attr_writer name(): ::String?
+
+    attr_reader event_id(): ::Integer
+
+    attr_writer event_id(): ::Integer?
+
+    attr_accessor param(): (::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param] | Enumerable[::Mrpc::Param])
+
+    def initialize: (?name: ::String?, ?event_id: ::Integer?, ?param: (::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param] | Enumerable[::Mrpc::Param])) -> void
+
+    def []: (:name) -> ::String
+          | (:event_id) -> ::Integer
+          | (:param) -> ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]
+          | (::Symbol) -> untyped
+
+    def []=: (:name, ::String?) -> ::String?
+           | (:event_id, ::Integer?) -> ::Integer?
+           | (:param, (::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param] | Enumerable[::Mrpc::Param])) -> ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]
+           | (::Symbol, untyped) -> untyped
+  end
+
+  class Param < ::Protobuf::Message
+    class Sequence < ::Protobuf::Message
+      attr_accessor val(): ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]
+
+      def initialize: (?val: ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]) -> void
+
+      def []: (:val) -> ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]
+            | (::Symbol) -> untyped
+
+      def []=: (:val, ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]) -> ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]
+             | (::Symbol, untyped) -> untyped
+    end
+
+    attr_reader sval(): ::String
+
+    attr_writer sval(): ::String?
+
+    attr_reader ival(): ::Integer
+
+    attr_writer ival(): ::Integer?
+
+    attr_reader dval(): ::Float
+
+    attr_writer dval(): ::Float?
+
+    attr_reader bval(): true | false
+
+    attr_writer bval(): (true | false)?
+
+    attr_accessor time(): ::Google::Protobuf::Timestamp?
+
+    attr_accessor proxy(): ::Mrpc::Proxy?
+
+    attr_reader error(): ::String
+
+    attr_writer error(): ::String?
+
+    attr_accessor sequence(): ::Mrpc::Param::Sequence?
+
+    def initialize: (?sval: ::String?, ?ival: ::Integer?, ?dval: ::Float?, ?bval: (true | false)?, ?time: ::Google::Protobuf::Timestamp?, ?proxy: ::Mrpc::Proxy?, ?error: ::String?, ?sequence: ::Mrpc::Param::Sequence?) -> void
+
+    def []: (:sval) -> ::String
+          | (:ival) -> ::Integer
+          | (:dval) -> ::Float
+          | (:bval) -> (true | false)
+          | (:time) -> ::Google::Protobuf::Timestamp?
+          | (:proxy) -> ::Mrpc::Proxy?
+          | (:error) -> ::String
+          | (:sequence) -> ::Mrpc::Param::Sequence?
+          | (::Symbol) -> untyped
+
+    def []=: (:sval, ::String?) -> ::String?
+           | (:ival, ::Integer?) -> ::Integer?
+           | (:dval, ::Float?) -> ::Float?
+           | (:bval, (true | false)?) -> (true | false)?
+           | (:time, ::Google::Protobuf::Timestamp?) -> ::Google::Protobuf::Timestamp?
+           | (:proxy, ::Mrpc::Proxy?) -> ::Mrpc::Proxy?
+           | (:error, ::String?) -> ::String?
+           | (:sequence, ::Mrpc::Param::Sequence?) -> ::Mrpc::Param::Sequence?
+           | (::Symbol, untyped) -> untyped
+
+    def bval?: () -> bool
+  end
+
+  class Proxy < ::Protobuf::Message
+    attr_reader class_id(): ::String
+
+    attr_writer class_id(): ::String?
+
+    attr_reader id(): ::String
+
+    attr_writer id(): ::String?
+
+    def initialize: (?class_id: ::String?, ?id: ::String?) -> void
+
+    def []: (:class_id) -> ::String
+          | (:id) -> ::String
+          | (::Symbol) -> untyped
+
+    def []=: (:class_id, ::String?) -> ::String?
+           | (:id, ::String?) -> ::String?
+           | (::Symbol, untyped) -> untyped
+  end
+
+  class ProxyQuery < ::Protobuf::Message
+    attr_accessor subject(): ::Mrpc::Proxy?
+
+    attr_reader selection(): ::String
+
+    attr_writer selection(): ::String?
+
+    def initialize: (?subject: ::Mrpc::Proxy?, ?selection: ::String?) -> void
+
+    def []: (:subject) -> ::Mrpc::Proxy?
+          | (:selection) -> ::String
+          | (::Symbol) -> untyped
+
+    def []=: (:subject, ::Mrpc::Proxy?) -> ::Mrpc::Proxy?
+           | (:selection, ::String?) -> ::String?
+           | (::Symbol, untyped) -> untyped
+  end
+
+  class ProxyValue < ::Protobuf::Message
+    attr_accessor subject(): ::Mrpc::Proxy?
+
+    attr_reader selection(): ::String
+
+    attr_writer selection(): ::String?
+
+    attr_accessor response(): ::Mrpc::Param?
+
+    def initialize: (?subject: ::Mrpc::Proxy?, ?selection: ::String?, ?response: ::Mrpc::Param?) -> void
+
+    def []: (:subject) -> ::Mrpc::Proxy?
+          | (:selection) -> ::String
+          | (:response) -> ::Mrpc::Param?
+          | (::Symbol) -> untyped
+
+    def []=: (:subject, ::Mrpc::Proxy?) -> ::Mrpc::Proxy?
+           | (:selection, ::String?) -> ::String?
+           | (:response, ::Mrpc::Param?) -> ::Mrpc::Param?
+           | (::Symbol, untyped) -> untyped
+  end
+
+  class FilteringPayload < ::Protobuf::Message
+    class Start < ::Protobuf::Message
+      attr_reader name(): ::String
+
+      attr_writer name(): ::String?
+
+      def initialize: (?name: ::String?) -> void
+
+      def []: (:name) -> ::String
+            | (::Symbol) -> untyped
+
+      def []=: (:name, ::String?) -> ::String?
+             | (::Symbol, untyped) -> untyped
+    end
+
+    attr_accessor start(): ::Mrpc::FilteringPayload::Start?
+
+    attr_accessor response(): ::Mrpc::FilterQuery?
+
+    attr_accessor resolve(): ::Mrpc::ProxyValue?
+
+    def initialize: (?start: ::Mrpc::FilteringPayload::Start?, ?response: ::Mrpc::FilterQuery?, ?resolve: ::Mrpc::ProxyValue?) -> void
+
+    def []: (:start) -> ::Mrpc::FilteringPayload::Start?
+          | (:response) -> ::Mrpc::FilterQuery?
+          | (:resolve) -> ::Mrpc::ProxyValue?
+          | (::Symbol) -> untyped
+
+    def []=: (:start, ::Mrpc::FilteringPayload::Start?) -> ::Mrpc::FilteringPayload::Start?
+           | (:response, ::Mrpc::FilterQuery?) -> ::Mrpc::FilterQuery?
+           | (:resolve, ::Mrpc::ProxyValue?) -> ::Mrpc::ProxyValue?
+           | (::Symbol, untyped) -> untyped
+  end
+
+  class FilteringRequest < ::Protobuf::Message
+    attr_accessor request(): ::Mrpc::FilterQuery?
+
+    attr_accessor query(): ::Mrpc::ProxyQuery?
+
+    def initialize: (?request: ::Mrpc::FilterQuery?, ?query: ::Mrpc::ProxyQuery?) -> void
+
+    def []: (:request) -> ::Mrpc::FilterQuery?
+          | (:query) -> ::Mrpc::ProxyQuery?
+          | (::Symbol) -> untyped
+
+    def []=: (:request, ::Mrpc::FilterQuery?) -> ::Mrpc::FilterQuery?
+           | (:query, ::Mrpc::ProxyQuery?) -> ::Mrpc::ProxyQuery?
+           | (::Symbol, untyped) -> untyped
+  end
+
+  class FilterQuery < ::Protobuf::Message
+    attr_reader name(): ::String
+
+    attr_writer name(): ::String?
+
+    attr_reader event_id(): ::Integer
+
+    attr_writer event_id(): ::Integer?
+
+    attr_accessor param(): ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]
+
+    def initialize: (?name: ::String?, ?event_id: ::Integer?, ?param: ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]) -> void
+
+    def []: (:name) -> ::String
+          | (:event_id) -> ::Integer
+          | (:param) -> ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]
+          | (::Symbol) -> untyped
+
+    def []=: (:name, ::String?) -> ::String?
+           | (:event_id, ::Integer?) -> ::Integer?
+           | (:param, ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]) -> ::Protobuf::Field::FieldArray[::Mrpc::Param, ::Mrpc::Param]
+           | (::Symbol, untyped) -> untyped
+  end
+end
