@@ -3,15 +3,28 @@
 # Classes
 class Plugin
   module RemotePluginCall
+    type pluggalid_atomic = nil | String | Integer | Float | bool | Time | Plugin::RemotePluginCall::ProxyObject | Enumerable[untyped]
+
     def self.mrpc_param: (untyped arg) -> Mrpc::Param
-      def self.mrpc_param_unbox: (Mrpc::Param box, ^(Plugin::RemotePluginCall::ProxyObject, Symbol) -> Mrpc::Param unbox_requester) -> (nil | String | Integer | Float | bool | Time | Plugin::RemotePluginCall::ProxyObject | Enumerable[untyped])
+    def self.mrpc_param_unbox: (Mrpc::Param box, ^(Plugin::RemotePluginCall::ProxyObject, Symbol) -> Mrpc::Param unbox_requester) -> pluggalid_atomic
 
     class FilteringRequester
       @receive: Enumerable[::Mrpc::FilteringPayload]
+      @awaiting: Hash[Integer, Thread::Queue[::Mrpc::FilterQuery]]
+
+      attr_reader send_queue: Thread::Queue[::Mrpc::FilteringRequest]
 
       def initialize: (Enumerable[::Mrpc::FilteringPayload]) -> void
       def each_item: -> Enumerable[::Mrpc::FilteringRequest]
-                   | () -> Enumerable[::Mrpc::FilteringRequest]
+                   | () { (::Mrpc::FilteringRequest) -> void } -> Enumerable[::Mrpc::FilteringRequest]
+      def receive_start: (::Mrpc::FilteringPayload::Start start) -> void
+      def send_request: (name: String|Symbol, event_id: Integer, param: Enumerable[::Mrpc::Param]) -> Enumerable[pluggalid_atomic]
+      def receive_response: (::Mrpc::FilterQuery response) -> void
+      def receive_resolve: (::Mrpc::ProxyValue resolve) -> void
+
+      private
+
+      def plugin: -> ::Plugin
     end
 
     class ProxyObject < BasicObject
