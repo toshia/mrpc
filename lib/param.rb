@@ -19,11 +19,11 @@ class Plugin
         ::Mrpc::Param.new(
           time: { seconds: time.tv_sec, nanos: time.nsec }
         )
-      when Plugin::RemotePluginCall::Proxy
+      when Pluggaloid::Mirage
         ::Mrpc::Param.new(
           proxy: {
             class_id: arg.class.to_s,
-            id: arg._proxy_identity
+            id: arg.pluggaloid_mirage_id
           }
         )
       when Enumerable

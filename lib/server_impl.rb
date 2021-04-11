@@ -6,7 +6,7 @@ class Plugin
       # @params q ::Mrpc::ProxyValue
       def query(q, _call)
         method = q.selection
-        value = Plugin::RemotePluginCall::Proxy.unwrap(q.subject)
+        value = Pluggaloid::Mirage.unwrap(namespace: q.subject.class_id, id: q.subject.id)
         ::Mrpc::ProxyValue.new(
           subject: q.subject,
           selection: q.selection,

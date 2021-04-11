@@ -4,14 +4,13 @@ __dir__&.yield_self do |dir|
   $LOAD_PATH << File.join(dir, 'gen')
 end
 require 'service_services_pb'
-require_relative 'filter_request_sender'
-require_relative 'param'
-require_relative 'proxy'
-require_relative 'proxy_object'
-require_relative 'server_impl'
+require_relative 'lib/filter_request_sender'
+require_relative 'lib/param'
+require_relative 'lib/proxy_object'
+require_relative 'lib/server_impl'
 
 class Diva::Model
-  include Plugin::RemotePluginCall::Proxy
+  include Pluggaloid::Mirage
 end
 
 Plugin.create(:remote_plugin_call) do
