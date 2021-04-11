@@ -56,6 +56,9 @@ class Plugin
     end
   end
 
+  class Event
+  end
+
   def self.[]: (Symbol | String) -> Plugin
   def add_event: (Symbol | String) { (*bot rest) -> void } -> Plugin::Event
 end

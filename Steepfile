@@ -1,7 +1,7 @@
 target :lib do
   signature 'sig'
 
-  check '*.rb'        # Glob
+  check 'lib/'
   # ignore "lib/templates/*.rb"
 
   # library "pathname", "set"       # Standard libraries
