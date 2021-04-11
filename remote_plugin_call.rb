@@ -4,7 +4,7 @@ __dir__&.yield_self do |dir|
   $LOAD_PATH << File.join(dir, 'gen')
 end
 require 'service_services_pb'
-require_relative 'lib/filter_request_sender'
+require_relative 'lib/filtering_requester'
 require_relative 'lib/param'
 require_relative 'lib/proxy_object'
 require_relative 'lib/server_impl'

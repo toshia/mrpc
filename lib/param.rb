@@ -39,22 +39,23 @@ class Plugin
 
     # @param box [Mrpc::Param] unboxする対象
     def self.mrpc_param_unbox(box, unbox_requester)
-      if box.has_sval?
+      case box.val
+      when :sval
         box.sval
-      elsif box.has_ival?
+      when :ival
         box.ival
-      elsif box.has_dval?
+      when :dval
         box.dval
-      elsif box.has_bval?
+      when :bval
         box.bval
-      elsif box.has_time?
+      when :time
         Time.at(box.time.seconds, box.time.nanos, :nanosecond, in: 'UTC')
-      elsif box.has_proxy?
+      when :proxy
         Plugin::RemotePluginCall::ProxyObject.new(box.proxy, unbox_requester)
-      elsif box.has_error?
+      when :error
         error "unboxing error #{box.error.inspect}"
         nil
-      elsif box.has_sequence?
+      when :sequence
         box.sequence.val.lazy.map { |v| mrpc_param_unbox(v, unbox_requester) }
       end
     end

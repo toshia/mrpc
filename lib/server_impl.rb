@@ -31,40 +31,7 @@ class Plugin
       end
 
       def filtering(request, _call)
-        request_sender = FilteringRequestSender.new
-        filter_response_queue = Queue.new # Mrpc::FilterQuery
-        filter = nil
-        event_id = 0
-
-        request.each do |filtering_payload|
-          notice "receive: #{filtering_payload.inspect}"
-          if filtering_payload.has_start?
-            filter = filtering_start(filtering_payload.start.name.freeze, filter_response_queue, request_sender)
-          elsif filtering_payload.has_response?
-            response = filtering_payload.response
-            if response.event_id == event_id
-              filter_response_queue.push(response)
-            else
-              warn "event_id mismatched! (expect #{event_id}, actual #{response.event_id} in `#{filter.name}')"
-            end
-          elsif filtering_payload.has_resolve?
-            request_sender.resolve(filtering_payload.resolve)
-          end
-        rescue StandardError => e
-          error e
-        ensure
-          warn "#{filter&.name} closed!!!"
-          filter_response_queue.close
-          request_sender.close
-          Plugin[:remote_plugin_call].detach(filter) if filter
-        end
-        Enumerator.new do |yielder|
-          a = request_sender.queue.pop
-          event_id = a.event_id
-          notice "send #{a.inspect}"
-          yielder << a
-          notice "#{filter&.name} closed normally"
-        end
+        FilteringRequester.new(request).each_item
       end
 
       # @params [String|Symbol] filter_name フィルタ名
