@@ -10,17 +10,18 @@ class Plugin
 
     class FilteringRequester
       @receive: Enumerable[::Mrpc::FilteringPayload]
-      @awaiting: Hash[Integer, Thread::Queue[::Mrpc::FilterQuery]]
+      @awaiting: Hash[Integer, Thread::Queue]
 
-      attr_reader send_queue: Thread::Queue[::Mrpc::FilteringRequest]
+      attr_reader send_queue: Thread::Queue
 
       def initialize: (Enumerable[::Mrpc::FilteringPayload]) -> void
       def each_item: -> Enumerable[::Mrpc::FilteringRequest]
                    | () { (::Mrpc::FilteringRequest) -> void } -> Enumerable[::Mrpc::FilteringRequest]
       def receive_start: (::Mrpc::FilteringPayload::Start start) -> void
-      def send_request: (name: String|Symbol, event_id: Integer, param: Enumerable[::Mrpc::Param]) -> Enumerable[pluggalid_atomic]
       def receive_response: (::Mrpc::FilterQuery response) -> void
       def receive_resolve: (::Mrpc::ProxyValue resolve) -> void
+      def send_request: (name: String|Symbol, event_id: Integer, param: Enumerable[::Mrpc::Param]) -> Enumerable[pluggalid_atomic]
+      def send_query: (subject: ::Mrpc::Proxy, selection: String) -> ::Mrpc::Param
 
       private
 
@@ -51,8 +52,16 @@ class Plugin
   class Event
   end
 
+  class EventFilter
+  end
+
+  class HandlerTag
+  end
+
   def self.[]: (Symbol | String) -> Plugin
-  def add_event: (Symbol | String) { (*bot rest) -> void } -> Plugin::Event
+  def add_event: (Symbol | String) { (*bot rest) -> void } -> Event
+  def add_event_filter: (Symbol | String event_name, ?tags: (HandlerTag | Enumerable[HandlerTag]), ?name: String) { (*pluggalid_atomic rest) -> Array[pluggalid_atomic] } -> EventFilter
+  def handler_tag: -> HandlerTag
 end
 
 module Kernel

@@ -49,27 +49,9 @@ class Plugin
           send_request(
             name: event_name,
             event_id: event_id,
-            param: args.map(&Plugin::RemotePluginCall.method(:mrpc_param))
+            param: args.map { |x| Plugin::RemotePluginCall.mrpc_param(x) }
           )
         end
-      end
-
-      def send_request(name:, event_id:, param:)
-        await = @awaiting[event_id] = Queue.new
-        send_queue.push(
-          ::Mrpc::FilteringRequest.new(
-            request: ::Mrpc::FilterQuery.new(
-              name: name,
-              event_id: event_id,
-              param: param,
-            )
-          )
-        )
-        await.pop.param.map { |x|
-          Plugin::RemotePluginCall.mrpc_param_unbox(x, -> (proxy_object, message) {
-                                                      nil # TODO
-                                                    })
-        }
       end
 
       def receive_response(response)
@@ -78,7 +60,43 @@ class Plugin
       end
 
       def receive_resolve(resolve)
-        
+        query_id = resolve.subject&.class_id.hash ^ resolve.subject&.id.hash ^ resolve.selection.hash
+        @awaiting.fetch(query_id).push(resolve)
+        @awaiting.delete(query_id)
+      end
+
+      def send_request(name:, event_id:, param:)
+        await = @awaiting[event_id] = Queue.new
+        send_queue.push(
+          ::Mrpc::FilteringRequest.new(
+            request: ::Mrpc::FilterQuery.new(
+              name: name.to_s,
+              event_id: event_id,
+              param: param,
+            )
+          )
+        )
+        await.pop.param.map { |box|
+          Plugin::RemotePluginCall.mrpc_param_unbox(
+            box,
+            -> (proxy_object, message) {
+              send_query(subject: proxy_object.proxy,
+                         selection: message.to_s)
+            }
+          )
+        }
+      end
+
+      def send_query(subject:, selection:)
+        query_id = subject.class_id.hash ^ subject.id.hash ^ selection.hash
+        await = @awaiting[query_id] = Queue.new
+        ::Mrpc::FilteringRequest.new(
+          query: ::Mrpc::ProxyQuery.new(
+            subject: subject,
+            selection: selection,
+          )
+        )
+        await.pop.resolve.response
       end
 
       private
