@@ -1,0 +1,35 @@
+# TypeProf 0.13.0
+
+# Classes
+module Kernel
+  private
+  alias self.__raise__ self.raise
+end
+
+module Mrpc
+  Event: untyped
+  Param: untyped
+  Proxy: untyped
+  ProxyQuery: untyped
+  ProxyValue: untyped
+  FilteringPayload: untyped
+  FilteringRequest: untyped
+  FilterQuery: untyped
+  SubscribeRequest: untyped
+  SpellRequest: untyped
+  SpellResponse: untyped
+
+  module PluggaloidService
+    Stub: untyped
+
+    class Service
+      # include GRPC::GenericService
+    end
+  end
+end
+
+module Google
+  module Protobuf
+    Timestamp: untyped
+  end
+end

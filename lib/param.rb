@@ -29,7 +29,7 @@ class Plugin
       when Enumerable
         ::Mrpc::Param.new(
           sequence: {
-            val: arg.map(&method(:mrpc_param))
+            val: arg.map(&method(:mrpc_param)).to_a
           }
         )
       else

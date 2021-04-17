@@ -38,14 +38,6 @@ class Plugin
     end
 
     class Server
-      def query: (untyped q, untyped _call) -> untyped
-               | (untyped q, untyped _call) -> untyped
-      def subscribe: (untyped request, untyped _call) -> Enumerator[bot, bot]
-                   | (untyped request, untyped _call) -> Enumerator[bot, bot]
-      def filtering: (untyped request, untyped _call) -> Enumerator[bot, bot]
-                   | (untyped request, untyped _call) -> Enumerator[bot, bot]
-      def filtering_start: (untyped filter_name, Thread::Queue filter_response_queue, FilteringRequestSender sender) -> untyped
-                         | (untyped filter_name, Thread::Queue filter_response_queue, FilteringRequestSender sender) -> untyped
     end
   end
 
