@@ -9,10 +9,6 @@ require_relative 'lib/param'
 require_relative 'lib/proxy_object'
 require_relative 'lib/server_impl'
 
-class Diva::Model
-  include Pluggaloid::Mirage
-end
-
 Plugin.create(:remote_plugin_call) do
   Thread.new do
     loop do
