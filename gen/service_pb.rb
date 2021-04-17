@@ -9,9 +9,37 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     add_message "mrpc.SubscribeRequest" do
       optional :name, :string, 1
     end
+    add_message "mrpc.SpellRequest" do
+      oneof :payload do
+        optional :request, :message, 1, "mrpc.SpellRequest.Call"
+        optional :resolve, :message, 2, "mrpc.ProxyValue"
+      end
+    end
+    add_message "mrpc.SpellRequest.Call" do
+      optional :name, :string, 1
+      repeated :args, :message, 2, "mrpc.Proxy"
+    end
+    add_message "mrpc.SpellResponse" do
+      oneof :payload do
+        optional :ok, :message, 1, "mrpc.SpellResponse.Success"
+        optional :ng, :message, 2, "mrpc.SpellResponse.Error"
+        optional :query, :message, 3, "mrpc.ProxyQuery"
+      end
+    end
+    add_message "mrpc.SpellResponse.Success" do
+      optional :value, :message, 1, "mrpc.Param"
+    end
+    add_message "mrpc.SpellResponse.Error" do
+      optional :value, :message, 1, "mrpc.Param"
+    end
   end
 end
 
 module Mrpc
   SubscribeRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.SubscribeRequest").msgclass
+  SpellRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.SpellRequest").msgclass
+  SpellRequest::Call = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.SpellRequest.Call").msgclass
+  SpellResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.SpellResponse").msgclass
+  SpellResponse::Success = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.SpellResponse.Success").msgclass
+  SpellResponse::Error = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("mrpc.SpellResponse.Error").msgclass
 end

@@ -8,8 +8,39 @@ service PluggaloidService {
   rpc Query(ProxyQuery) returns (ProxyValue);
   rpc Subscribe(SubscribeRequest) returns (stream Event);
   rpc Filtering(stream FilteringPayload) returns (stream FilteringRequest);
+
+  /**
+   * サーバ上でspellを呼び出し、結果を要求する。
+   * サーバがSpellのパラメータのProxyを解決するために、クライアントにProxyQueryを送ることができる。クライアントはこのクエリに応答しなければならない。
+   */
+  rpc Spell(SpellRequest) returns (SpellResponse);
 }
 
 message SubscribeRequest {
   string name = 1;
+}
+
+message SpellRequest {
+  message Call {
+    string name = 1;
+    repeated Proxy args = 2;
+  }
+  oneof payload {
+    Call request = 1;
+    ProxyValue resolve = 2;
+  }
+}
+
+message SpellResponse {
+  message Success {
+    Param value = 1;
+  }
+  message Error {
+    Param value = 1;
+  }
+  oneof payload {
+    Success ok = 1;
+    Error ng = 2;
+    ProxyQuery query = 3;
+  }
 }

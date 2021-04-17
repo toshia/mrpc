@@ -1,0 +1,15 @@
+@startuml
+Client -> Server: SpellRequest(spell name, models...)
+Server -> Plugin: Call spell
+Plugin -> Server: Receive promise
+
+loop Reverse Query
+  Plugin -> Server: Read property
+  Server -> Client: ProxyQuery(proxy, query)
+  Client -> Server: ProxyValue(param)
+  Server -> Plugin: return value
+end
+
+Plugin -> Server: Resolve Promise
+Server -> Client: SpellResponse(ok: param)
+@enduml
