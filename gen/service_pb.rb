@@ -17,7 +17,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     end
     add_message "mrpc.SpellRequest.Call" do
       optional :name, :string, 1
-      repeated :args, :message, 2, "mrpc.Proxy"
+      repeated :models, :message, 2, "mrpc.Proxy"
+      map :params, :string, :message, 3, "mrpc.Param"
     end
     add_message "mrpc.SpellResponse" do
       oneof :payload do

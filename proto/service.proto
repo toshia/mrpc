@@ -13,7 +13,7 @@ service PluggaloidService {
    * サーバ上でspellを呼び出し、結果を要求する。
    * サーバがSpellのパラメータのProxyを解決するために、クライアントにProxyQueryを送ることができる。クライアントはこのクエリに応答しなければならない。
    */
-  rpc Spell(SpellRequest) returns (SpellResponse);
+  rpc Spell(stream SpellRequest) returns (stream SpellResponse);
 }
 
 message SubscribeRequest {
@@ -23,7 +23,8 @@ message SubscribeRequest {
 message SpellRequest {
   message Call {
     string name = 1;
-    repeated Proxy args = 2;
+    repeated Proxy models = 2;
+    map<string, Param> params = 3;
   }
   oneof payload {
     Call request = 1;

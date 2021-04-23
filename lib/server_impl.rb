@@ -34,7 +34,11 @@ class Plugin
       end
 
       def spell(request, _call)
-        
+        notice request
+        ::Plugin::RemotePluginCall::SpellRequester.new(request).each_item
+      rescue => err
+        error err
+        raise
       end
     end
   end

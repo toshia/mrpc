@@ -20,7 +20,7 @@ module Mrpc
       # *
       # サーバ上でspellを呼び出し、結果を要求する。
       # サーバがSpellのパラメータのProxyを解決するために、クライアントにProxyQueryを送ることができる。クライアントはこのクエリに応答しなければならない。
-      rpc :Spell, ::Mrpc::SpellRequest, ::Mrpc::SpellResponse
+      rpc :Spell, stream(::Mrpc::SpellRequest), stream(::Mrpc::SpellResponse)
     end
 
     Stub = Service.rpc_stub_class
