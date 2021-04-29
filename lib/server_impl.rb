@@ -3,8 +3,10 @@
 class Plugin
   module RemotePluginCall
     class Server < ::Mrpc::PluggaloidService::Service
-      # @params q ::Mrpc::ProxyValue
+      # rpc Query(ProxyQuery) returns (ProxyValue);
+      # @params q ::Mrpc::ProxyQuery
       def query(q, _call)
+        notice q # <Mrpc::ProxyQuery: selection: "">
         method = q.selection
         value = Pluggaloid::Mirage.unwrap(namespace: q.subject.class_id, id: q.subject.id)
         ::Mrpc::ProxyValue.new(
@@ -12,6 +14,9 @@ class Plugin
           selection: q.selection,
           response: Plugin::RemotePluginCall.mrpc_param(value.public_send(method))
         )
+      rescue => err
+        error err
+        raise
       end
 
       def subscribe(request, _call)
@@ -27,10 +32,16 @@ class Plugin
             y << queue.pop
           end
         end
+      rescue => err
+        error err
+        raise
       end
 
       def filtering(request, _call)
         FilteringRequester.new(request).each_item
+      rescue => err
+        error err
+        raise
       end
 
       def spell(request, _call)
