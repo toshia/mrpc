@@ -3,6 +3,7 @@
 class Plugin
   module RemotePluginCall
     class ProxyObject < BasicObject
+      include ::Pluggaloid::Mirage
       attr_reader :proxy
 
       def initialize(proxy, unbox_requester)
@@ -17,6 +18,22 @@ class Plugin
         else
           @cache[message] = @unbox_requester.call(self, message)
         end
+      end
+
+      def ==(other)
+        case other
+        when Mrpc::Proxy
+          other == proxy
+        when Plugin::RemotePluginCall::ProxyObject
+          other.proxy == proxy
+        when ::Pluggaloid::Mirage
+          other.pluggaloid_mirage_namespace == proxy.class_id &&
+            other.pluggaloid_mirage_id == proxy.id
+        end
+      end
+
+      def inspect
+        "#<Plugin::RemotePluginCall::ProxyObject: #{proxy.inspect}>"
       end
     end
   end
