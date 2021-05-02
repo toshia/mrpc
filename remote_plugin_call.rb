@@ -28,3 +28,24 @@ Plugin.create(:remote_plugin_call) do
     end
   end
 end
+
+module GRPC
+  class MRPCLogger
+    def info(...)
+      notice(...)
+    end
+
+    def debug(...)
+      warn(...)
+    end
+
+    def warn(...)
+      error(...)
+    end
+  end
+
+  MRCP_LOGGER = MRPCLogger.new
+  def self.logger
+    MRCP_LOGGER
+  end
+end
