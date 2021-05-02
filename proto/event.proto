@@ -41,28 +41,3 @@ message ProxyValue {
   string selection = 2;
   Param response = 3;
 }
-
-message FilteringPayload {
-  message Start {
-    string name = 1;
-  }
-
-  oneof payload {
-    Start start = 1;
-    FilterQuery response = 2;
-    ProxyValue resolve = 3;
-  }
-}
-
-message FilteringRequest {
-  oneof payload {
-    FilterQuery request = 2;
-    ProxyQuery query = 3;
-  }
-}
-
-message FilterQuery {
-  string name = 1;
-  fixed64 event_id = 2;
-  repeated Param param = 3;
-}
