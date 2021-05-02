@@ -1,0 +1,33 @@
+@startuml
+header Filtering
+skinparam handwritten true
+skinparam monochrome true
+
+participant Client
+
+box "mikutter"
+  participant mRPC as mrpc
+  participant Pluggaloid
+  participant "other plugins" as Other
+end box
+
+Client -> mrpc: FilteringPayload::Start(name)
+mrpc -> Pluggaloid: Register filter(name)
+
+loop Filtering
+  Other -> Pluggaloid ++: Plugin.filtering(name, ...)
+  Pluggaloid -> mrpc ++: Filter values
+  mrpc -> Client ++: Request FilterQuery(name, ...)
+  return Converted FilterQuery(name, ...)
+  return return (...)
+  return return (...)
+end
+
+loop ProxyObject query
+  Other -> mrpc ++: call method
+  mrpc -> Client ++: ProxyQuery query
+  return ProxyValue resolve
+  return Return value
+end
+
+@enduml

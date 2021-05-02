@@ -1,0 +1,24 @@
+@startuml
+header Subscribe
+skinparam handwritten true
+skinparam monochrome true
+
+participant Client
+
+box "mikutter"
+  participant mRPC as mrpc
+  participant Pluggaloid
+  participant "other plugins" as Other
+end box
+
+Client -> mrpc: SubscribeRequest(name)
+mrpc -> Pluggaloid: Register event listener
+
+loop Event receive
+  Other -> Pluggaloid ++: Fire event
+  Pluggaloid -> mrpc: receive event
+  mrpc -> Client: Event
+  return
+end
+
+@enduml

@@ -1,15 +1,34 @@
 @startuml
-Client -> Server: SpellRequest(spell name, models...)
-Server -> Plugin: Call spell
-Plugin -> Server: Receive promise
+header Spell
+skinparam handwritten true
+skinparam monochrome true
 
-loop Reverse Query
-  Plugin -> Server: Read property
-  Server -> Client: ProxyQuery(proxy, query)
-  Client -> Server: ProxyValue(param)
-  Server -> Plugin: return value
-end
+participant Client
 
-Plugin -> Server: Resolve Promise
-Server -> Client: SpellResponse(ok: param)
+box "mikutter"
+  participant mRPC as mrpc
+  /'participant Pluggaloid'/
+  participant "spell plugin" as Spell
+  participant "other plugins" as Other
+end box
+
+Client -> mrpc ++: SpellRequest (name, models, option)
+mrpc -> Spell: Call spell (name, models)
+activate Spell
+  Spell -> Other: Call spell (name, models)
+  activate Other
+    Spell --> mrpc: Return Promise
+  deactivate Spell
+
+  loop Reverse Query
+    Other -> mrpc ++: Read property
+    mrpc -> Client ++: ProxyQuery query
+    return ProxyValue resolve
+    return return value
+  end
+
+  Other --> mrpc: Resolve Promise
+deactivate Other
+
+return SpellResponse(ok: param)
 @enduml
